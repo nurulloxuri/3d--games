@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navigation */
+        .navbar {
+            background-color: #000000;
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 1px;
+            cursor: pointer;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: white;
+        }
+        
+        /* Orange underline effect */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #ff6b35;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .contact-btn {
+            background-color: #ff6b35;
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-btn:hover {
+            background-color: #e55a2b;
+            transform: translateY(-1px);
+        }
+        
+        .contact-btn::after {
+            display: none;
+        }
+        
+        /* Mobile menu */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
+        /* Page Content */
+        .page {
+            display: none;
+            padding-top: 100px;
+            min-height: 100vh;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            text-align: center;
+            padding: 40px 0 20px;
+            font-size: 16px;
+        }
+        
+        .breadcrumb a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b35;
+        }
+        
+        .breadcrumb .current {
+            color: #ff6b35;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 40px 0 80px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .hero p {
+            color: #ccc;
+            font-size: 18px;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Stats Section */
+        .stats {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 60px 40px;
+            margin: 60px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+        
+        .stat-item {
+            text-align: center;
+            position: relative;
+        }
+        
+        .stat-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60px;
+            width: 1px;
+            background-color: #333;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #ff6b35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: #ccc;
+            font-size: 18px;
+        }
+        
+        /* Content Section */
+        .content-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            margin: 100px 0;
+            align-items: center;
+        }
+        
+        .content-left {
+            position: relative;
+        }
+        
+        .content-left img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .content-left:hover img {
+            transform: scale(1.02);
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 24px;
+            color: #333;
+        }
+        
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background-color: white;
+        }
+        
+        .content-right h2 {
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+        
+        .content-right p {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-top: 30px;
+        }
+        
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            color: #ccc;
+            font-size: 16px;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            color: #34a853;
+            font-weight: bold;
+            margin-right: 16px;
+            width: 24px;
+            height: 24px;
+            background-color: rgba(52, 168, 83, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        
+        .read-more-btn {
+            background-color: #ff6b35;
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+        
+        .read-more-btn:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            text-align: center;
+            padding: 100px 0;
+            margin: 100px 0;
+        }
+        
+        .testimonials h2 {
+            font-size: 42px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        
+        .testimonials-subtitle {
+            color: #ccc;
+            font-size: 18px;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .testimonials-container {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 60px;
+            justify-content: center;
+            overflow-x: auto;
+            padding: 0 20px;
+        }
+        
+        .testimonial-card {
+            background-color: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 350px;
+            min-width: 300px;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:first-child {
+            border-color: #ff6b35;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 16px;
+            object-fit: cover;
+        }
+        
+        .testimonial-info h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        .testimonial-location {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .testimonial-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .rating-number {
+            font-weight: 600;
+            color: white;
+        }
+        
+        .star {
+            color: #ff6b35;
+            font-size: 18px;
+        }
+        
+        .testimonial-text {
+            color: #ccc;
+            line-height: 1.6;
+            text-align: left;
+        }
+        
+        .testimonials-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+        
+        .testimonials-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #555;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dot.active {
+            background-color: #ff6b35;
+        }
+        
+        .nav-arrow {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid #ff6b35;
+            background-color: transparent;
+            color: #ff6b35;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            text-decoration: none;
+        }
+        
+        .nav-arrow:hover,
+        .nav-arrow.active {
+            background-color: #ff6b35;
+            color: white;
+        }
+        
+        /* Newsletter */
+        .newsletter-section {
+            background-color: #1a1a1a;
+            border-radius: 16px;
+            padding: 80px 60px;
+            margin: 100px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .newsletter-content h3 {
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 16px;
+        }
+        
+        .newsletter-content p {
+            color: #ccc;
+            font-size: 16px;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 20px;
+            min-width: 400px;
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            padding: 16px 24px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #000;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .newsletter-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+        
+        .newsletter-input::placeholder {
+            color: #888;
+        }
+        
+        .newsletter-btn {
+            background-color: #ff6b35;
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-btn:hover {
+            background-color: #e55a2b;
+        }
+        
+        /* Footer */
+        .footer-intro {
+            padding: 80px 0 40px;
+        }
+        
+        .footer-intro h2 {
+            font-size: 42px;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+        
+        .footer-intro p {
+            color: #ccc;
+            font-size: 16px;
+            max-width: 600px;
+        }
+        
+        .main-footer {
+            padding: 60px 0 40px;
+            border-top: 1px solid #222;
+            background-color: #0a0a0a;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+        }
+        
+        .footer-brand h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .footer-brand p {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .footer-social {
+            color: #888;
+        }
+        
+        .footer-column h4 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .footer-links a:hover {
+            color: #ff6b35;
+        }
+        
+        .footer-contact p {
+            color: #ccc;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        
+        .footer-phone {
+            color: white;
+            font-weight: 500;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: #ff6b35;
+            transform: translateY(-2px);
+        }
+        
+        /* About Page Styles */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-content h1 {
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .about-content p {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        /* Portfolio Page Styles */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .portfolio-item {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .portfolio-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+        
+        .portfolio-content {
+            padding: 30px;
+        }
+        
+        .portfolio-content h3 {
+            margin-bottom: 16px;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .portfolio-content p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+        
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .scroll-to-top:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+        }
+        
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #333;
+            border-top: 3px solid #ff6b35;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 30px;
+                padding-top: 50px;
+                transition: left 0.3s ease;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 40px;
+            }
+            
+            .stat-item:not(:last-child)::after {
+                display: none;
+            }
+            
+            .content-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .testimonials-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .testimonials h2 {
+                font-size: 32px;
+            }
+            
+            .newsletter-section {
+                flex-direction: column;
+                text-align: center;
+                padding: 60px 30px;
+            }
+            
+            .newsletter-form {
+                min-width: auto;
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo" onclick="showPage('home')">LOGO</div>
+                <div class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a class="nav-link active" onclick="showPage('home')" data-page="home">Home</a></li>
+                    <li><a class="nav-link" onclick="showPage('about')" data-page="about">About us</a></li>
+                    <li><a class="nav-link" onclick="showPage('portfolio')" data-page="portfolio">Portfolio</a></li>
+                    <li><a class="nav-link" onclick="showPage('news')" data-page="news">News</a></li>
+                    <li><a class="nav-link contact-btn" onclick="scrollToContact()">Contact us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="container">
+            <div class="breadcrumb">
+                <a onclick="showPage('home')">Home</a> > <span class="current">Services</span>
+            </div>
+            
+            <section class="hero">
+                <h1>Lorem Ipsum is simply dummy text of the printing and.</h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+            </section>
+            
+            <section class="stats">
+                <div class="stat-item">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number" data-count="90">0</div>
+                    <div class="stat-label">Clients</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📍</div>
+                    <div class="stat-number" data-count="30">0</div>
+                    <div class="stat-label">Countries</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-number" data-count="50">0</div>
+                    <div class="stat-label">Projects</div>
+                </div>
+            </section>
+            
+            <section class="content-section">
+                <div class="content-left">
+                    <img src="Video Image.png" alt="Featured content">
+                    <div class="play-button" onclick="playVideo()">▶</div>
+                </div>
+                <div class="content-right">
+                    <h2>Lorem Ipsum is simply dummy text.</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy.</p>
+                    <ul class="feature-list">
+                        <li>Lorem ipsum is simply</li>
+                        <li>Lorem ipsum is simply</li>
+                        <li>Lorem ipsum is simply</li>
+                        <li>Lorem ipsum is simply</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <section class="content-section">
+                <div class="content-right">
+                    <h2>Lorem Ipsum is simply dummy text dummy text</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <button class="read-more-btn" onclick="showReadMore(this)">Read more</button>
+                </div>
+                <div class="content-left">
+                    <img src="Rectangle 6.png" alt="Cyberpunk cityscape">
+                </div>
+            </section>
+            
+            <section class="content-section">
+                <div class="content-left">
+                    <img src="Rectangle 24.png" alt="Anime character with magical effects">
+                </div>
+                <div class="content-right">
+                    <h2>Lorem Ipsum is simply dummy text dummy text</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <button class="read-more-btn" onclick="showReadMore(this)">Read more</button>
+                </div>
+            </section>
+            
+            <section class="content-section">
+                <div class="content-right">
+                    <h2>Lorem Ipsum is simply dummy text dummy text</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <button class="read-more-btn" onclick="showReadMore(this)">Read more</button>
+                </div>
+                <div class="content-left">
+                    <img src="Rectangle 25.png" alt="Futuristic soldier in battle armor">
+                </div>
+            </section>
+            
+            <!-- Testimonials Section -->
+            <section class="testimonials">
+                <h2>Trusted by Thousands of Happy Customer</h2>
+                <p class="testimonials-subtitle">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy.</p>
+                
+                <div class="testimonials-container" id="testimonialsContainer">
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                           <img src="Ellipse 175 (2).png" alt="Viezh Robert" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h3>Viezh Robert</h3>
+                                <p class="testimonial-location">Warsaw, Poland</p>
+                            </div>
+                            <div class="testimonial-rating">
+                                <span class="rating-number">4.5</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="Ellipse 175.png" alt="Yessica Christy" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h3>Yessica Christy</h3>
+                                <p class="testimonial-location">Shanxi, China</p>
+                            </div>
+                            <div class="testimonial-rating">
+                                <span class="rating-number">4.5</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">Lorem Ipsum is simply dummy text of the printing and</p>
+                    </div>
+                    
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <img src="Ellipse 175 (1).png" alt="Kim Young Jou" class="testimonial-avatar">
+                            <div class="testimonial-info">
+                                <h3>Kim Young Jou</h3>
+                                <p class="testimonial-location">Seoul, South Korea</p>
+                            </div>
+                            <div class="testimonial-rating">
+                                <span class="rating-number">4.5</span>
+                                <span class="star">★</span>
+                            </div>
+                        </div>
+                        <p class="testimonial-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    </div>
+                </div>
+                
+                <div class="testimonials-navigation">
+                    <button class="nav-arrow" onclick="previousTestimonial()">←</button>
+                    <div class="testimonials-dots">
+                        <div class="dot active" onclick="currentTestimonial(1)"></div>
+                        <div class="dot" onclick="currentTestimonial(2)"></div>
+                        <div class="dot" onclick="currentTestimonial(3)"></div>
+                        <div class="dot" onclick="currentTestimonial(4)"></div>
+                    </div>
+                    <button class="nav-arrow active" onclick="nextTestimonial()">→</button>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Footer Section -->
+        <footer id="contact">
+            <div class="container">
+                <section class="footer-intro">
+                    <h2>Lorem Ipsum</h2>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                </section>
+                
+                <section class="newsletter-section">
+                    <div class="newsletter-content">
+                        <h3>Stay in the loop</h3>
+                        <p>Subscribe to receive the latest news and updates about TDA. We promise not to spam you!</p>
+                    </div>
+                    <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+                        <input type="email" class="newsletter-input" placeholder="Enter email address" required>
+                        <button type="submit" class="newsletter-btn">Continue</button>
+                    </form>
+                </section>
+            </div>
+            
+            <div class="main-footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-brand">
+                            <h3>LOGO</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                            <p class="footer-social">@Lorem</p>
+                        </div>
+                        <div class="footer-column">
+                            <h4>About us</h4>
+                            <ul class="footer-links">
+                                <li><a onclick="showPage('home')">ZeuX</a></li>
+                                <li><a onclick="showPage('portfolio')">Portfolio</a></li>
+                                <li><a href="#">Careers</a></li>
+                                <li><a onclick="scrollToContact()">Contact us</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-column">
+                            <h4>Contact us</h4>
+                            <div class="footer-contact">
+                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                                <p class="footer-phone">+908 89097 890</p>
+                            </div>
+                        </div>
+                        <div class="footer-column">
+                            <div class="social-icons">
+                                <a href="#" class="social-icon">f</a>
+                                <a href="#" class="social-icon">@</a>
+                                <a href="#" class="social-icon">t</a>
+                                <a href="#" class="social-icon">in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="container">
+            <div class="breadcrumb">
+                <a onclick="showPage('home')">Home</a> > <span class="current">About</span>
+            </div>
+            
+            <section class="about-content">
+                <h1>About Us</h1>
+                <p>We are a creative agency specializing in digital solutions and innovative design. Our team of experts is dedicated to bringing your vision to life through cutting-edge technology and creative excellence.</p>
+                <p>With over 10 years of experience in the industry, we have worked with clients from around the world, delivering exceptional results that exceed expectations.</p>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-number">5.0</div>
+                        <div class="stat-label">Rating</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-number">25+</div>
+                        <div class="stat-label">Awards</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Portfolio Page -->
+    <div id="portfolio" class="page">
+        <div class="container">
+            <div class="breadcrumb">
+                <a onclick="showPage('home')">Home</a> > <span class="current">Portfolio</span>
+            </div>
+            
+            <section class="hero">
+                <h1>Our Portfolio</h1>
+                <p>Explore our latest projects and creative solutions</p>
+            </section>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item" onclick="openPortfolioItem('Creative Design Project')">
+                    <div class="portfolio-image">🎨</div>
+                    <div class="portfolio-content">
+                        <h3>Creative Design Project</h3>
+                        <p>A comprehensive branding solution for a modern tech startup.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" onclick="openPortfolioItem('Web Development')">
+                    <div class="portfolio-image">💻</div>
+                    <div class="portfolio-content">
+                        <h3>Web Development</h3>
+                        <p>Responsive website development with modern technologies.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" onclick="openPortfolioItem('Mobile App Design')">
+                    <div class="portfolio-image">📱</div>
+                    <div class="portfolio-content">
+                        <h3>Mobile App Design</h3>
+                        <p>User-friendly mobile application with intuitive interface.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" onclick="openPortfolioItem('Digital Marketing')">
+                    <div class="portfolio-image">🚀</div>
+                    <div class="portfolio-content">
+                        <h3>Digital Marketing</h3>
+                        <p>Complete digital marketing campaign with measurable results.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" onclick="openPortfolioItem('Brand Strategy')">
+                    <div class="portfolio-image">🎯</div>
+                    <div class="portfolio-content">
+                        <h3>Brand Strategy</h3>
+                        <p>Strategic brand positioning and identity development.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item" onclick="openPortfolioItem('Data Analytics')">
+                    <div class="portfolio-image">📊</div>
+                    <div class="portfolio-content">
+                        <h3>Data Analytics</h3>
+                        <p>Advanced analytics dashboard for business intelligence.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Page -->
+    <div id="news" class="page">
+        <div class="container">
+            <div class="breadcrumb">
+                <a onclick="showPage('home')">Home</a> > <span class="current">News</span>
+            </div>
+            
+            <section class="hero">
+                <h1>Latest News</h1>
+                <p>Stay updated with our latest news and insights</p>
+            </section>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-image">📰</div>
+                    <div class="portfolio-content">
+                        <h3>Company Milestone</h3>
+                        <p>We've reached 100+ successful projects this year!</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image">🏆</div>
+                    <div class="portfolio-content">
+                        <h3>Award Recognition</h3>
+                        <p>Our team won the Best Digital Agency Award 2024.</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-image">🚀</div>
+                    <div class="portfolio-content">
+                        <h3>New Service Launch</h3>
+                        <p>Introducing our new AI-powered design solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // Global variables
+        let currentTestimonialIndex = 0;
+        let isAnimating = false;
+
+        // Initialize the website
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1000);
+
+            // Initialize counters
+            animateCounters();
+            
+            // Initialize scroll events
+            window.addEventListener('scroll', handleScroll);
+            
+            // Initialize mobile menu
+            initializeMobileMenu();
+        });
+
+        // Page navigation
+        function showPage(pageId) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            const currentPage = document.querySelector('.page.active');
+            
+            if (currentPage) {
+                currentPage.classList.remove('active');
+            }
+
+            // Show target page with delay for smooth transition
+            setTimeout(() => {
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    
+                    // Update navigation
+                    updateNavigation(pageId);
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Re-animate counters if on home page
+                    if (pageId === 'home') {
+                        setTimeout(animateCounters, 500);
+                    }
+                }
+                
+                isAnimating = false;
+            }, 100);
+
+            // Close mobile menu if open
+            closeMobileMenu();
+        }
+
+        // Update navigation active state
+        function updateNavigation(activePageId) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === activePageId) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Mobile menu functionality
+        function initializeMobileMenu() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.getElementById('navMenu');
+
+            mobileMenuBtn.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                mobileMenuBtn.classList.toggle('active');
+            });
+        }
+
+        function closeMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            navMenu.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+        }
+
+        // Scroll handling
+        function handleScroll() {
+            const navbar = document.getElementById('navbar');
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+
+            // Navbar background on scroll
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Show/hide scroll to top button
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.add('visible');
+            } else {
+                scrollToTopBtn.classList.remove('visible');
+            }
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Scroll to contact section
+        function scrollToContact() {
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                // First ensure we're on the home page
+                showPage('home');
+                
+                // Then scroll to contact after a delay
+                setTimeout(() => {
+                    contactSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+            }
+        }
+
+        // Animate counters
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number[data-count]');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-count'));
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 16); // 60fps
+                let current = 0;
+
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.textContent = Math.floor(current) + '+';
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target + '+';
+                    }
+                };
+
+                // Reset counter first
+                counter.textContent = '0+';
+                updateCounter();
+            });
+        }
+
+        // Testimonial navigation
+        function nextTestimonial() {
+            currentTestimonialIndex = (currentTestimonialIndex + 1) % 4;
+            updateTestimonialDots();
+        }
+
+        function previousTestimonial() {
+            currentTestimonialIndex = (currentTestimonialIndex - 1 + 4) % 4;
+            updateTestimonialDots();
+        }
+
+        function currentTestimonial(index) {
+            currentTestimonialIndex = index - 1;
+            updateTestimonialDots();
+        }
+
+        function updateTestimonialDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentTestimonialIndex);
+            });
+        }
+
+        // Auto-rotate testimonials
+        setInterval(nextTestimonial, 5000);
+
+        // Play video functionality
+        function playVideo() {
+            alert('Video player would open here. This is a demo implementation.');
+        }
+
+        // Read more functionality
+        function showReadMore(button) {
+            const content = button.parentElement;
+            const additionalText = document.createElement('p');
+            additionalText.style.color = '#ccc';
+            additionalText.style.fontSize = '16px';
+            additionalText.style.lineHeight = '1.6';
+            additionalText.style.marginTop = '20px';
+            additionalText.textContent = 'Here would be additional content that was previously hidden. This demonstrates the read more functionality.';
+            
+            content.insertBefore(additionalText, button);
+            button.textContent = 'Read less';
+            button.onclick = function() {
+                content.removeChild(additionalText);
+                button.textContent = 'Read more';
+                button.onclick = function() { showReadMore(button); };
+            };
+        }
+
+        // Newsletter subscription
+        function subscribeNewsletter(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('.newsletter-input').value;
+            
+            // Simulate API call
+            const button = event.target.querySelector('.newsletter-btn');
+            const originalText = button.textContent;
+            
+            button.textContent = 'Subscribing...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                alert(`Thank you for subscribing with email: ${email}`);
+                event.target.reset();
+                button.textContent = originalText;
+                button.disabled = false;
+            }, 1500);
+        }
+
+        // Portfolio item click
+        function openPortfolioItem(title) {
+            alert(`Opening portfolio item: ${title}\n\nThis would typically open a detailed view or modal with more information about the project.`);
+        }
+
+        // Smooth scrolling for anchor links
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('a[href^="#"]')) {
+                e.preventDefault();
+                const target = document.querySelector(e.target.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.content-section, .testimonial-card, .portfolio-item');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+            }
+            
+            // Arrow key navigation for testimonials
+            if (e.key === 'ArrowLeft') {
+                previousTestimonial();
+            } else if (e.key === 'ArrowRight') {
+                nextTestimonial();
+            }
+        });
+    </script>
+</body>
+</html>

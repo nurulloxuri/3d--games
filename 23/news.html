@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #000000;
+            color: white;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #000000;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .logo:hover {
+            color: #ff6b35;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        nav a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: white;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #ff6b35;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .contact-btn {
+            background-color: #ff6b35;
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+            transform: translateY(0);
+        }
+        
+        .contact-btn:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .contact-btn::after {
+            display: none;
+        }
+        
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 20px 0;
+            font-size: 14px;
+        }
+        
+        .breadcrumb a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .breadcrumb a:hover {
+            color: #ff6b35;
+        }
+        
+        .breadcrumb .current {
+            color: #ff6b35;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 40px 0 60px;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero p {
+            color: #ccc;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .search-input::placeholder {
+            color: #888;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            transition: color 0.3s;
+        }
+        
+        .search-input:focus + .search-icon {
+            color: #ff6b35;
+        }
+        
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            padding: 60px 0;
+        }
+        
+        .featured-article {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .featured-article:hover {
+            transform: translateY(-5px);
+        }
+        
+        .featured-article img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .featured-article:hover img {
+            transform: scale(1.05);
+        }
+        
+        .article-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px 0;
+        }
+        
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #4285f4;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .author-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .featured-title {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+        
+        .featured-title:hover {
+            color: #ff6b35;
+        }
+        
+        .featured-excerpt {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        /* Side Articles */
+        .side-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .side-article {
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .side-article:hover {
+            background-color: #2a2a2a;
+            transform: translateX(5px);
+        }
+        
+        .side-article img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .side-article:hover img {
+            transform: scale(1.05);
+        }
+        
+        .side-content {
+            flex: 1;
+        }
+        
+        .side-author {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .author-name {
+            background-color: #ff6b35;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .author-name:hover {
+            transform: scale(1.1);
+        }
+        
+        .author-name.blue {
+            background-color: #4285f4;
+        }
+        
+        .author-name.red {
+            background-color: #ea4335;
+        }
+        
+        .author-name.green {
+            background-color: #34a853;
+        }
+        
+        .author-name.purple {
+            background-color: #9c27b0;
+        }
+        
+        .time {
+            color: #888;
+        }
+        
+        .side-title {
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.4;
+            transition: color 0.3s ease;
+        }
+        
+        .side-article:hover .side-title {
+            color: #ff6b35;
+        }
+        
+        /* Additional Content Styles */
+        .additional-content {
+            padding: 40px 0;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .large-featured {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .large-featured:hover {
+            transform: translateY(-5px);
+        }
+        
+        .large-featured img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .large-featured:hover img {
+            transform: scale(1.02);
+        }
+        
+        .article-info .author-badge {
+            background-color: #4285f4;
+            margin-bottom: 15px;
+        }
+        
+        .article-title {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            transition: color 0.3s ease;
+        }
+        
+        .large-featured:hover .article-title {
+            color: #ff6b35;
+        }
+        
+        .article-excerpt {
+            color: #ccc;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .right-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .small-article {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .small-article:hover {
+            background-color: #2a2a2a;
+            transform: translateX(5px);
+        }
+        
+        .small-article img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .small-article:hover img {
+            transform: scale(1.1);
+        }
+        
+        .article-content {
+            flex: 1;
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .small-title {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.4;
+            color: white;
+            transition: color 0.3s ease;
+        }
+        
+        .small-article:hover .small-title {
+            color: #ff6b35;
+        }
+        
+        .lorem-section {
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+        
+        .section-text {
+            color: #ccc;
+            font-size: 16px;
+        }
+        
+        /* Newsletter Styles */
+        .newsletter {
+            background-color: #2a2a2a;
+            border-radius: 16px;
+            padding: 60px 40px;
+            text-align: center;
+            margin-bottom: 60px;
+            transition: transform 0.3s ease;
+        }
+        
+        .newsletter:hover {
+            transform: translateY(-2px);
+        }
+        
+        .newsletter-title {
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+        
+        .newsletter-text {
+            color: #ccc;
+            font-size: 16px;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .email-input {
+            flex: 1;
+            padding: 15px 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .email-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        
+        .email-input::placeholder {
+            color: #888;
+        }
+        
+        .continue-btn {
+            background-color: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            transform: translateY(0);
+        }
+        
+        .continue-btn:hover {
+            background-color: #e55a2b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .continue-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #0f0f0f;
+            padding: 60px 0 20px;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-section p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .footer-handle {
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #ff6b35;
+        }
+        
+        .contact-info {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .phone-number {
+            color: white;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: #ff6b35;
+            transform: translateY(-3px);
+        }
+        
+        .social-icon.facebook:hover {
+            background-color: #1877f2;
+        }
+        
+        .social-icon.instagram:hover {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        }
+        
+        .social-icon.twitter:hover {
+            background-color: #1da1f2;
+        }
+        
+        .social-icon.linkedin:hover {
+            background-color: #0077b5;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle:checked + .mobile-menu-btn + nav ul {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: #1a1a1a;
+                flex-direction: column;
+                padding: 20px;
+                border-top: 1px solid #333;
+            }
+            
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .newsletter {
+                padding: 40px 20px;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .article-title {
+                font-size: 24px;
+            }
+            
+            .newsletter-title {
+                font-size: 28px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            
+            .social-icons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#home" class="logo">LOGO</a>
+                <input type="checkbox" id="mobile-menu-toggle" class="mobile-menu-toggle">
+                <label for="mobile-menu-toggle" class="mobile-menu-btn">☰</label>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About us</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="#contact" class="contact-btn">Contact us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="#home">Home</a> > <span class="current">News</span>
+            </div>
+
+            <section class="hero" id="hero">
+                <h1>Lorem Ipsum is simply dummy text of the printing and.</h1>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search">
+                    <span class="search-icon">🔍</span>
+                </div>
+            </section>
+
+            <section class="news-grid" id="news">
+                <article class="featured-article">
+                    <img src="/Rectangle 274.png" alt="Featured article">
+                    <div class="article-overlay">
+                        <div class="author-badge">
+                            <span>John smith</span>
+                            <span class="time">5min</span>
+                        </div>
+                        <h2 class="featured-title">Lorem Ipsum is simply dummy text dummy text</h2>
+                        <p class="featured-excerpt">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+                        <p class="featured-excerpt">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    </div>
+                </article>
+
+                <div class="side-articles">
+                    <article class="side-article">
+                        <img src="/Rectangle 276.png" alt="Article thumbnail">
+                        <div class="side-content">
+                            <div class="side-author">
+                                <span class="author-name red">John smith</span>
+                                <span class="time">5min</span>
+                            </div>
+                            <h3 class="side-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                        </div>
+                    </article>
+
+                    <article class="side-article">
+                        <img src="/Rectangle 276 (1).png" alt="Article thumbnail">
+                        <div class="side-content">
+                            <div class="side-author">
+                                <span class="author-name blue">John smith</span>
+                                <span class="time">5min</span>
+                            </div>
+                            <h3 class="side-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                        </div>
+                    </article>
+
+                    <article class="side-article">
+                        <img src="/Rectangle 276 (2).png" alt="Article thumbnail">
+                        <div class="side-content">
+                            <div class="side-author">
+                                <span class="author-name">John smith</span>
+                                <span class="time">5min</span>
+                            </div>
+                            <h3 class="side-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                        </div>
+                    </article>
+
+                    <article class="side-article">
+                        <img src="/Rectangle 276 (3).png" alt="Article thumbnail">
+                        <div class="side-content">
+                            <div class="side-author">
+                                <span class="author-name blue">John smith</span>
+                                <span class="time">5min</span>
+                            </div>
+                            <h3 class="side-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="additional-content">
+                <div class="content-grid">
+                    <article class="large-featured">
+                        <img src="/Rectangle 274 (1).png" alt="Cyberpunk street scene">
+                        <div class="article-info">
+                            <div class="author-badge">
+                                <span>John smith</span>
+                                <span class="time">5min</span>
+                            </div>
+                            <h2 class="article-title">Lorem Ipsum is simply dummy text dummy text</h2>
+                            <p class="article-excerpt">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+                        </div>
+                    </article>
+
+                    <div class="right-articles">
+                        <article class="small-article">
+                            <img src="/Rectangle 276 (4).png" alt="Office meeting">
+                            <div class="article-content">
+                                <div class="author-info">
+                                    <span class="author-name green">John smith</span>
+                                    <span class="time">5min</span>
+                                </div>
+                                <h3 class="small-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                            </div>
+                        </article>
+
+                        <article class="small-article">
+                            <img src="/Rectangle 276 (5).png" alt="Person with camera">
+                            <div class="article-content">
+                                <div class="author-info">
+                                    <span class="author-name blue">John smith</span>
+                                    <span class="time">5min</span>
+                                </div>
+                                <h3 class="small-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                            </div>
+                        </article>
+
+                        <article class="small-article">
+                            <img src="/Rectangle 276 (6).png" alt="Abstract design">
+                            <div class="article-content">
+                                <div class="author-info">
+                                    <span class="author-name purple">John smith</span>
+                                    <span class="time">5min</span>
+                                </div>
+                                <h3 class="small-title">Lorem Ipsum is simply dummy text dummy text ?</h3>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="lorem-section">
+                    <h2 class="section-title">Lorem Ipsum</h2>
+                    <p class="section-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                </div>
+            </section>
+
+            <section class="newsletter">
+                <div class="newsletter-content">
+                    <h2 class="newsletter-title">Stay in the loop</h2>
+                    <p class="newsletter-text">Subscribe to receive the latest news and updates about TDA. We promise not to spam you!</p>
+                    <form class="newsletter-form">
+                        <input type="email" class="email-input" placeholder="Enter email address" required>
+                        <button type="submit" class="continue-btn">Continue</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LOGO</h3>
+                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <div class="footer-handle">@Lorem</div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>About us</h3>
+                    <ul class="footer-links">
+                        <li><a href="#about">Zeux</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#contact">Contact us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact us</h3>
+                    <div class="contact-info">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                        <div class="phone-number">+908 89097 890</div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="social-icons">
+                        <a href="https://facebook.com" class="social-icon facebook" target="_blank">f</a>
+                        <a href="https://instagram.com" class="social-icon instagram" target="_blank">📷</a>
+                        <a href="https://twitter.com" class="social-icon twitter" target="_blank">🐦</a>
+                        <a href="https://linkedin.com" class="social-icon linkedin" target="_blank">in</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                Copyright © 2021 Lorem All rights Reserved
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
